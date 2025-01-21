@@ -46,7 +46,7 @@ func NewClient(ak, sk string) Client {
 	}
 }
 
-func (ctx *Client) ImageUpload(image model.Image) {
+func (ctx *Client) ImageUpload(image model.Image) model.Result {
 	dataParam := DataParam{}
 	dataParam.Method = consts.UploadImage
 	dataParam.InterfaceName = consts.Image
@@ -57,20 +57,19 @@ func (ctx *Client) ImageUpload(image model.Image) {
 		DirId:      image.DirId,
 		FileName:   image.ImageName,
 	}
-	fmt.Println("请求参数", *ctx)
 	resp := ctx.sendRequest(dataParam)
-	fmt.Println(resp)
+	return response(resp)
 }
 
-func (ctx *Client) Images() {
+func (ctx *Client) Images() model.Result {
 	dataParam := DataParam{}
 	dataParam.Method = consts.ListImage
 	dataParam.InterfaceName = consts.Image
 	resp := ctx.sendRequest(dataParam)
-	fmt.Println(resp)
+	return response(resp)
 }
 
-func (ctx *Client) Random(dirId int) {
+func (ctx *Client) Random(dirId int) model.Result {
 	dataParam := DataParam{}
 	dataParam.Method = consts.RandomImage
 	dataParam.InterfaceName = consts.Image
@@ -78,10 +77,10 @@ func (ctx *Client) Random(dirId int) {
 		dataParam.ExtData = extData{DirId: -1}
 	}
 	resp := ctx.sendRequest(dataParam)
-	fmt.Println(resp)
+	return response(resp)
 }
 
-func (ctx *Client) CreateDir(parentDirId int, dirName string) {
+func (ctx *Client) CreateDir(parentDirId int, dirName string) model.Result {
 	dataParam := DataParam{}
 	dataParam.InterfaceName = consts.Image
 	dataParam.Method = consts.CreateDir
@@ -90,23 +89,23 @@ func (ctx *Client) CreateDir(parentDirId int, dirName string) {
 		DirName:     dirName,
 	}
 	resp := ctx.sendRequest(dataParam)
-	fmt.Println(resp)
+	return response(resp)
 }
 
-func (ctx *Client) Dirs() {
+func (ctx *Client) Dirs() model.Result {
 	param := DataParam{}
 	param.InterfaceName = consts.Image
 	param.Method = consts.ListDir
 	resp := ctx.sendRequest(param)
-	fmt.Println(resp)
+	return response(resp)
 }
 
-func (ctx *Client) Bucket() {
+func (ctx *Client) Bucket() model.Result {
 	param := DataParam{}
 	param.InterfaceName = consts.User
 	param.Method = consts.GetBucket
 	resp := ctx.sendRequest(param)
-	fmt.Println(resp)
+	return response(resp)
 }
 
 func (ctx *Client) CreateBucket(name string) model.Result {
@@ -115,20 +114,15 @@ func (ctx *Client) CreateBucket(name string) model.Result {
 	param.Method = consts.CreateBucket
 	param.ExtData.BucketName = name
 	resp := ctx.sendRequest(param)
-	result := model.Result{}
-	unErr := json.Unmarshal([]byte(resp), &result)
-	if unErr != nil {
-		fmt.Println("解析json失败")
-	}
-	return result
+	return response(resp)
 }
 
-func (ctx *Client) UserInfo() {
+func (ctx *Client) UserInfo() model.Result {
 	param := DataParam{}
 	param.InterfaceName = consts.User
 	param.Method = consts.UserInfo
 	resp := ctx.sendRequest(param)
-	fmt.Println(resp)
+	return response(resp)
 }
 
 func (ctx *Client) sendRequest(param DataParam) string {
@@ -140,4 +134,13 @@ func (ctx *Client) sendRequest(param DataParam) string {
 		fmt.Println("fleurui_api调用失败")
 	}
 	return resp
+}
+
+func response(resp string) model.Result {
+	result := model.Result{}
+	unErr := json.Unmarshal([]byte(resp), &result)
+	if unErr != nil {
+		fmt.Println("解析json失败", unErr)
+	}
+	return result
 }

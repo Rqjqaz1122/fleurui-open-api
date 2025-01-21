@@ -9,7 +9,7 @@ type Image struct {
 }
 
 type Result struct {
-	code int
-	msg  string
-	data string
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+	Data any    `json:"data"`
 }
