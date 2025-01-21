@@ -1,6 +1,7 @@
 package client
 
 import (
+	"encoding/json"
 	"fleurui_api/consts"
 	"fleurui_api/http"
 	"fleurui_api/model"
@@ -88,36 +89,46 @@ func (ctx *Client) CreateDir(parentDirId int, dirName string) {
 		ParentDirId: parentDirId,
 		DirName:     dirName,
 	}
-	ctx.sendRequest(dataParam)
+	resp := ctx.sendRequest(dataParam)
+	fmt.Println(resp)
 }
 
 func (ctx *Client) Dirs() {
 	param := DataParam{}
 	param.InterfaceName = consts.Image
 	param.Method = consts.ListDir
-	ctx.sendRequest(param)
+	resp := ctx.sendRequest(param)
+	fmt.Println(resp)
 }
 
 func (ctx *Client) Bucket() {
 	param := DataParam{}
 	param.InterfaceName = consts.User
 	param.Method = consts.GetBucket
-	ctx.sendRequest(param)
+	resp := ctx.sendRequest(param)
+	fmt.Println(resp)
 }
 
-func (ctx *Client) CreateBucket(name string) {
+func (ctx *Client) CreateBucket(name string) model.Result {
 	param := DataParam{}
 	param.InterfaceName = consts.User
 	param.Method = consts.CreateBucket
 	param.ExtData.BucketName = name
-	ctx.sendRequest(param)
+	resp := ctx.sendRequest(param)
+	result := model.Result{}
+	unErr := json.Unmarshal([]byte(resp), &result)
+	if unErr != nil {
+		fmt.Println("解析json失败")
+	}
+	return result
 }
 
 func (ctx *Client) UserInfo() {
 	param := DataParam{}
 	param.InterfaceName = consts.User
 	param.Method = consts.UserInfo
-	ctx.sendRequest(param)
+	resp := ctx.sendRequest(param)
+	fmt.Println(resp)
 }
 
 func (ctx *Client) sendRequest(param DataParam) string {
