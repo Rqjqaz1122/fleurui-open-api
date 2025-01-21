@@ -2,11 +2,11 @@ package client
 
 import (
 	"encoding/json"
-	"fleurui_api/consts"
-	"fleurui_api/http"
-	"fleurui_api/model"
-	"fleurui_api/utils"
 	"fmt"
+	"github.com/Rqjqaz1122/fleurui-open-api/consts"
+	"github.com/Rqjqaz1122/fleurui-open-api/http"
+	"github.com/Rqjqaz1122/fleurui-open-api/model"
+	"github.com/Rqjqaz1122/fleurui-open-api/utils"
 	"time"
 )
 
