@@ -98,6 +98,28 @@ func (ctx *Client) Dirs() {
 	ctx.sendRequest(param)
 }
 
+func (ctx *Client) Bucket() {
+	param := DataParam{}
+	param.InterfaceName = consts.User
+	param.Method = consts.GetBucket
+	ctx.sendRequest(param)
+}
+
+func (ctx *Client) CreateBucket(name string) {
+	param := DataParam{}
+	param.InterfaceName = consts.User
+	param.Method = consts.CreateBucket
+	param.ExtData.BucketName = name
+	ctx.sendRequest(param)
+}
+
+func (ctx *Client) UserInfo() {
+	param := DataParam{}
+	param.InterfaceName = consts.User
+	param.Method = consts.UserInfo
+	ctx.sendRequest(param)
+}
+
 func (ctx *Client) sendRequest(param DataParam) string {
 	now := time.Now()
 	format := now.Format("2006-01-02 15:04:05")
