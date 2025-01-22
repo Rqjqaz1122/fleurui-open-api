@@ -7,6 +7,7 @@ import (
 	"github.com/Rqjqaz1122/fleurui-open-api/http"
 	"github.com/Rqjqaz1122/fleurui-open-api/model"
 	"github.com/Rqjqaz1122/fleurui-open-api/utils"
+	"os"
 	"time"
 )
 
@@ -56,6 +57,21 @@ func (ctx *Client) ImageUpload(image model.Image) model.Result {
 		Suffix:     image.Suffix,
 		DirId:      image.DirId,
 		FileName:   image.ImageName,
+	}
+	resp := ctx.sendRequest(dataParam)
+	return response(resp)
+}
+
+func (ctx *Client) FileUpload(file *os.File, dirId int, quality float64) model.Result {
+	dataParam := DataParam{}
+	dataParam.Method = consts.UploadImage
+	dataParam.InterfaceName = consts.Image
+	fileBase64, suffix := utils.ToBase64(file)
+	dataParam.ExtData = extData{
+		DirId:      dirId,
+		FileBase64: fileBase64,
+		Suffix:     suffix,
+		Quality:    quality,
 	}
 	resp := ctx.sendRequest(dataParam)
 	return response(resp)
