@@ -91,6 +91,8 @@ func (ctx *Client) Random(dirId int) model.Result {
 	dataParam.InterfaceName = consts.Image
 	if dirId == 0 {
 		dataParam.ExtData = extData{DirId: -1}
+	} else {
+		dataParam.ExtData = extData{DirId: dirId}
 	}
 	resp := ctx.sendRequest(dataParam)
 	return response(resp)
